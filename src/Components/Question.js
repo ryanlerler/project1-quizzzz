@@ -8,7 +8,7 @@ export default class Question extends Component {
   render() {
     const { questions, currentQuestion } = this.props;
     const allQuestions = questions.map((question) => (
-      <li key={question} value={currentQuestion}>
+      <li key={question} value={currentQuestion + 1}>
         {question}
       </li>
     ));

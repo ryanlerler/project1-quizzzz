@@ -4,6 +4,8 @@ import Form from "react-bootstrap/Form";
 
 export default class HomePage extends Component {
   render() {
+    const { questionCount, handleChange, category, difficulty } = this.props;
+
     const categoriesOptionTag = categories.map((category) => (
       <option value={category.id} key={category.id}>
         {category.name}
@@ -12,11 +14,12 @@ export default class HomePage extends Component {
 
     const questionCountOptionTag = [];
     for (let i = 5; i <= 50; i += 5) {
-      questionCountOptionTag.push(<option value={i} key={i}>{i}</option>);
+      questionCountOptionTag.push(
+        <option value={i} key={i}>
+          {i}
+        </option>
+      );
     }
-
-    console.log("questions", this.props.questions);
-    console.log("choices", this.props.choices);
 
     return (
       <div>
@@ -27,9 +30,9 @@ export default class HomePage extends Component {
         <br />
         <Form.Select
           name="questionCount"
-          value={this.props.questionCount}
+          value={questionCount}
           required
-          onChange={this.props.handleChange}
+          onChange={handleChange}
         >
           {questionCountOptionTag}
         </Form.Select>
@@ -38,9 +41,9 @@ export default class HomePage extends Component {
         <br />
         <Form.Select
           name="category"
-          value={this.props.category}
+          value={category}
           required
-          onChange={this.props.handleChange}
+          onChange={handleChange}
         >
           <option>Any</option>
           {categoriesOptionTag}
@@ -50,10 +53,11 @@ export default class HomePage extends Component {
         <br />
         <Form.Select
           name="difficulty"
-          value={this.props.difficulty}
+          value={difficulty}
           required
-          onChange={this.props.handleChange}
+          onChange={handleChange}
         >
+          <option value="any">Any</option>
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
