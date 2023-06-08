@@ -1,0 +1,57 @@
+{
+  "response_code": 0,
+  "results": [
+    {
+      "category": "Entertainment%3A%20Board%20Games",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Carcassonne%20is%20based%20on%20which%20French%20town%3F",
+      "correct_answer": "Carcassonne",
+      "incorrect_answers": ["Paris", "Marseille", "Clermont-Ferrand"]
+    },
+    {
+      "category": "Vehicles",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which%20supercar%20company%20is%20from%20Sweden%3F",
+      "correct_answer": "Koenigsegg",
+      "incorrect_answers": ["Bugatti", "Lamborghini", "McLaren"]
+    },
+    {
+      "category": "Entertainment%3A%20Music",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What%20collaborative%20album%20was%20released%20by%20Kanye%20West%20and%20Jay-Z%20in%202011%3F",
+      "correct_answer": "Watch%20the%20Throne",
+      "incorrect_answers": [
+        "Distant%20Relatives",
+        "What%20a%20Time%20to%20be%20Alive",
+        "Unfinished%20Business"
+      ]
+    },
+    {
+      "category": "Entertainment%3A%20Japanese%20Anime%20%26%20Manga",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which%20of%20the%20following%20films%20was%20NOT%20directed%20by%20Hayao%20Miyazaki%3F",
+      "correct_answer": "Wolf%20Children",
+      "incorrect_answers": [
+        "Princess%20Mononoke",
+        "Spirited%20Away",
+        "Kiki%27s%20Delivery%20Service"
+      ]
+    },
+    {
+      "category": "Entertainment%3A%20Music",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Who%20is%20the%20lead%20singer%20of%20Foo%20Fighters%3F",
+      "correct_answer": "Dave%20Grohl",
+      "incorrect_answers": [
+        "Dave%20Mustaine",
+        "James%20Hetfield",
+        "Little%20Red%20Riding%20Hood"
+      ]
+    }
+  ]
+}

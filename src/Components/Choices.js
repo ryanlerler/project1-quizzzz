@@ -1,13 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 
-export default class Choices extends Component {
+export default class Choices extends React.Component {
 
   render() {
-    const { shuffledChoices, currentQuestion, userChoice, handleChange } = this.props;
-    console.log("choices", shuffledChoices);
-    console.log("userChoice", userChoice);
+    const { shuffledChoices, currentQuestionIndex, userChoice, handleChange } =
+      this.props;
 
-    const radioButtons = shuffledChoices[currentQuestion].map((choice) => (
+    const radioButtons = shuffledChoices[currentQuestionIndex].map((choice) => (
       <div key={choice}>
         <label>
           <input

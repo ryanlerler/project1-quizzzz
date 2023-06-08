@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import categories from "./categories.json";
+import React from "react";
+import Categories from "./categories.json";
 import Form from "react-bootstrap/Form";
 
-export default class HomePage extends Component {
+export default class HomePage extends React.Component {
   render() {
     const { questionCount, handleChange, category, difficulty } = this.props;
 
-    const categoriesOptionTag = categories.map((category) => (
+    const categoriesOptionTag = Categories.map((category) => (
       <option value={category.id} key={category.id}>
         {category.name}
       </option>
@@ -57,7 +57,7 @@ export default class HomePage extends Component {
           required
           onChange={handleChange}
         >
-          <option value="any">Any</option>
+          <option>Any</option> 
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>

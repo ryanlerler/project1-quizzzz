@@ -1,4 +1,4 @@
-// ToDo: question must be answered before going to the next question (or maybe implement a BACK button to switch back & forth); 1st question often takes quite some time to load upon clicking the START button; refactor callApi function; last question's score is not counted
+// ToDo: refactor callApi function
 
 import axios from "axios";
 import React from "react";
@@ -18,7 +18,7 @@ class Quiz extends React.Component {
       questions: [],
       originalChoices: [],
       shuffledChoices: [],
-      currentQuestion: 0,
+      currentQuestionIndex: 0,
       userChoice: "",
       isQuizCompleted: false,
       score: 0,
@@ -55,54 +55,78 @@ class Quiz extends React.Component {
       )
       .then((data) => {
         console.log(data);
-        const randomChoices = data.data.results.map((result) => {
-          const unshuffledChoices = [
-            decodeURIComponent(result.correct_answer),
-            ...result.incorrect_answers.map((answer) =>
-              decodeURIComponent(answer)
-            ),
-          ];
-          return this.randomizeChoicesOrder(unshuffledChoices);
-        });
+        // Store data in local storage
+        if (data.data.response_code === 1) {
+          alert(
+            "The API doesn't have enough questions for your query. (Ex. Asking for 50 Questions in a Category that only has 20.)"
+          );
+        } else {
+          const randomChoices = data.data.results.map((result) => {
+            const unshuffledChoices = [
+              decodeURIComponent(result.correct_answer),
+              ...result.incorrect_answers.map((answer) =>
+                decodeURIComponent(answer)
+              ),
+            ];
+            return this.randomizeChoicesOrder(unshuffledChoices);
+          });
 
-        this.setState({
-          questions: data.data.results.map((result) =>
-            decodeURIComponent(result.question)
-          ),
-          originalChoices: data.data.results.map((result) => [
-            decodeURIComponent(result.correct_answer),
-            ...result.incorrect_answers.map((answer) =>
-              decodeURIComponent(answer)
+          this.setState({
+            questions: data.data.results.map((result) =>
+              decodeURIComponent(result.question)
             ),
-          ]),
-          shuffledChoices: randomChoices,
-        });
+            originalChoices: data.data.results.map((result) => [
+              decodeURIComponent(result.correct_answer),
+              ...result.incorrect_answers.map((answer) =>
+                decodeURIComponent(answer)
+              ),
+            ]),
+            shuffledChoices: randomChoices,
+          });
+        }
+      })
+      .catch(() => {
+        //Get questions from local storage
+        axios
+          .get(
+            `https://the-trivia-api.com/api/questions?limit=${questionCount}&categories=${category}&difficulty=${difficulty}&types=text_choice,image_choice`
+          )
+          .then((data) => {
+            console.log(data);
+            const randomChoices = data.data.map((result) => {
+              const unshuffledChoices = [
+                result.correctAnswer,
+                ...result.incorrectAnswers,
+              ];
+              return this.randomizeChoicesOrder(unshuffledChoices);
+            });
+
+            this.setState({
+              questions: data.data.map((result) => result.question),
+              originalChoices: data.data.map((result) => [
+                result.correctAnswer,
+                ...result.incorrectAnswers,
+              ]),
+              shuffledChoices: randomChoices,
+            });
+          });
       });
   };
 
-  goToNextQuestion = () => {
+  handleNextButtonClick = () => {
     this.setState((state) => ({
-      currentQuestion: state.currentQuestion + 1,
+      userChoice: "",
+      currentQuestionIndex: state.currentQuestionIndex + 1,
       score:
         this.state.userChoice ===
-        this.state.originalChoices[this.state.currentQuestion][0]
+        this.state.originalChoices[this.state.currentQuestionIndex][0]
           ? state.score + 1
           : state.score,
+      isQuizCompleted:
+        this.state.currentQuestionIndex === this.state.questions.length - 1
+          ? true
+          : false,
     }));
-  };
-
-  backToPreviousQuestion = () => {
-    if (this.state.currentQuestion === 0) return;
-
-    this.setState((state) => ({
-      currentQuestion: state.currentQuestion - 1,
-    }));
-  };
-
-  showResults = () => {
-    this.setState({
-      isQuizCompleted: true,
-    });
   };
 
   render() {
@@ -110,7 +134,7 @@ class Quiz extends React.Component {
       questions,
       originalChoices,
       shuffledChoices,
-      currentQuestion,
+      currentQuestionIndex,
       userChoice,
       score,
       isQuizCompleted,
@@ -126,7 +150,10 @@ class Quiz extends React.Component {
           <Results {...this.state} />
         ) : questions && questions.length > 0 ? (
           <>
-            <Question questions={questions} currentQuestion={currentQuestion} />
+            <Question
+              questions={questions}
+              currentQuestionIndex={currentQuestionIndex}
+            />
             <Choices {...this.state} handleChange={this.handleChange} />
           </>
         ) : (
@@ -142,24 +169,17 @@ class Quiz extends React.Component {
         {questions && questions.length > 0 && (
           <Button
             variant="light"
-            onClick={
-              currentQuestion === questions.length - 1
-                ? this.showResults
-                : this.goToNextQuestion
-            }
+            onClick={this.handleNextButtonClick}
             className="button"
+            disabled={!userChoice}
           >
-            {currentQuestion === questions.length - 1 ? "SUBMIT" : "NEXT"}
+            {isQuizCompleted
+              ? "REFRESH FOR ANOTHER QUIZ"
+              : currentQuestionIndex === questions.length - 1
+              ? "SUBMIT"
+              : "NEXT"}
           </Button>
         )}
-
-        {questions && questions.length > 0 && (
-          <Button variant="light" onClick={this.backToPreviousQuestion}>
-            BACK
-          </Button>
-        )}
-
-        <br />
       </div>
     );
   }

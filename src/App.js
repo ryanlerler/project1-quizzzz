@@ -2,19 +2,15 @@ import logo from "./logo.svg";
 import React from "react";
 import "./App.css";
 import Quiz from "./Components/Quiz";
+import Countdown from "react-countdown";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          {/* <img src={logo} className="App-logo" alt="logo" /> */}
+          <Countdown date={Date.now() + 100000}/>
           <Quiz />
         </header>
       </div>
