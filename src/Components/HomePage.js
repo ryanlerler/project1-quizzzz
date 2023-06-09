@@ -26,13 +26,16 @@ export default class HomePage extends React.Component {
         <h1>Welcome to Quizzzz!!!</h1>
         <br />
 
-        <Form.Label>Select Number of Questions:</Form.Label>
+        <Form.Label className="form-label">
+          Select Number of Questions:
+        </Form.Label>
         <br />
         <Form.Select
           name="questionCount"
           value={questionCount}
           required
           onChange={handleChange}
+          className="form-select"
         >
           {questionCountOptionTag}
         </Form.Select>
@@ -45,7 +48,7 @@ export default class HomePage extends React.Component {
           required
           onChange={handleChange}
         >
-          <option>Any</option>
+          <option value="">Any</option>
           {categoriesOptionTag}
         </Form.Select>
 
@@ -57,7 +60,7 @@ export default class HomePage extends React.Component {
           required
           onChange={handleChange}
         >
-          <option>Any</option> 
+          <option value="">Any</option>
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>

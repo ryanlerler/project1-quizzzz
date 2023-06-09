@@ -24,6 +24,10 @@ class Quiz extends React.Component {
       currentCorrectAnswers: 0,
       answeredQuestions: 0,
       accumulatedCorrectAnswers: 0,
+
+      // initialize a boolean state for the timer
+      // timer state
+      // implement user & leaderboard
     };
   }
 
@@ -64,7 +68,7 @@ class Quiz extends React.Component {
   callApi = () => {
     const { questionCount, category, difficulty } = this.state;
 
-    // Set encode=url3986 and use decodeURIComponent to decode special char like '&' etc.
+    // Set encode=url3986 and use decodeURIComponent() to decode the data including special char like '&' etc.
     // Keep the original choices for result comparison and then shuffle the choices for quiz purpose
     axios
       .get(
@@ -72,10 +76,13 @@ class Quiz extends React.Component {
       )
       .then((data) => {
         console.log(data);
-        // Store data in local storage
         if (data.data.response_code === 1) {
           alert(
-            "The API doesn't have enough questions for your query. (Ex. Asking for 50 Questions in a Category that only has 20.)"
+            "The API doesn't have enough questions for your query. \n (Ex. Asking for 50 Questions in a Category that only has 20.)"
+          );
+        } else if (data.data.response_code === 2) {
+          alert(
+            "Request contains an invalid parameter. Arguments passed in aren't valid."
           );
         } else {
           const randomChoices = data.data.results.map((result) => {
@@ -102,32 +109,7 @@ class Quiz extends React.Component {
           });
         }
       })
-      .catch(() => {
-        //Get questions from local storage
-        axios
-          .get(
-            `https://the-trivia-api.com/api/questions?limit=${questionCount}&categories=${category}&difficulty=${difficulty}&types=text_choice,image_choice`
-          )
-          .then((data) => {
-            console.log(data);
-            const randomChoices = data.data.map((result) => {
-              const unshuffledChoices = [
-                result.correctAnswer,
-                ...result.incorrectAnswers,
-              ];
-              return this.randomizeChoicesOrder(unshuffledChoices);
-            });
-
-            this.setState({
-              questions: data.data.map((result) => result.question),
-              originalChoices: data.data.map((result) => [
-                result.correctAnswer,
-                ...result.incorrectAnswers,
-              ]),
-              shuffledChoices: randomChoices,
-            });
-          });
-      });
+      .catch(() => alert("Server down! Please try again later."));
   };
 
   handleNextButtonClick = () => {
@@ -148,7 +130,7 @@ class Quiz extends React.Component {
     const newAccumulatedCorrectAnswers = isAnswerCorrect
       ? accumulatedCorrectAnswers + 1
       : accumulatedCorrectAnswers;
-      
+
     const newAnsweredQuestions = answeredQuestions + 1;
 
     // Store the score in local storage
@@ -214,7 +196,11 @@ class Quiz extends React.Component {
         )}
 
         {questions.length === 0 && (
-          <Button variant="light" onClick={this.callApi}>
+          <Button
+            variant="light"
+            onClick={this.callApi}
+            className="button glow-button"
+          >
             START
           </Button>
         )}
@@ -223,7 +209,7 @@ class Quiz extends React.Component {
           <Button
             variant="light"
             onClick={this.handleNextButtonClick}
-            className="button"
+            className="button glow-button"
             disabled={!userChoices[currentQuestionIndex]}
           >
             {isQuizCompleted

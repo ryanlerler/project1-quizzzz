@@ -6,7 +6,7 @@ export default class Choices extends React.Component {
       this.props;
 
     const radioButtons = shuffledChoices[currentQuestionIndex].map((choice) => (
-      <div key={choice}>
+      <div key={choice} className="radio-div">
         <label>
           <input
             type="radio"
@@ -15,6 +15,7 @@ export default class Choices extends React.Component {
             value={choice}
             checked={userChoices[currentQuestionIndex] === choice}
             onChange={handleChange}
+            className="radio-input"
           />
           {choice}
         </label>
