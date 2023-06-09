@@ -1,7 +1,6 @@
 import React from "react";
 
 export default class Choices extends React.Component {
-
   render() {
     const { shuffledChoices, currentQuestionIndex, userChoice, handleChange } =
       this.props;
@@ -15,7 +14,7 @@ export default class Choices extends React.Component {
             name="userChoice"
             value={choice}
             required
-            checked={userChoice === choice}
+            checked={userChoice[currentQuestionIndex] === choice}
             onChange={handleChange}
           />
           {choice}

@@ -19,17 +19,32 @@ class Quiz extends React.Component {
       originalChoices: [],
       shuffledChoices: [],
       currentQuestionIndex: 0,
-      userChoice: "",
+      userChoice: [],
       isQuizCompleted: false,
       score: 0,
     };
   }
 
   handleChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value,
-    });
+    const { name, value, type } = e.target;
+
+    if (type === "radio") {
+      const { userChoice, currentQuestionIndex } = this.state;
+
+      // Create a copy of the userChoice array
+      const updatedChoices = [...userChoice];
+
+      // Update the selected choice for the current question
+      updatedChoices[currentQuestionIndex] = value;
+
+      this.setState({
+        userChoice: updatedChoices,
+      });
+    } else {
+      this.setState({
+        [name]: value,
+      });
+    }
   };
 
   randomizeChoicesOrder = (choices) => {
@@ -114,16 +129,17 @@ class Quiz extends React.Component {
   };
 
   handleNextButtonClick = () => {
+    const {userChoice, currentQuestionIndex, originalChoices, questions} = this.state;
+
     this.setState((state) => ({
-      userChoice: "",
       currentQuestionIndex: state.currentQuestionIndex + 1,
       score:
-        this.state.userChoice ===
-        this.state.originalChoices[this.state.currentQuestionIndex][0]
+        userChoice[currentQuestionIndex] ===
+        originalChoices[currentQuestionIndex][0]
           ? state.score + 1
           : state.score,
       isQuizCompleted:
-        this.state.currentQuestionIndex === this.state.questions.length - 1
+        currentQuestionIndex === questions.length - 1
           ? true
           : false,
     }));
@@ -171,7 +187,7 @@ class Quiz extends React.Component {
             variant="light"
             onClick={this.handleNextButtonClick}
             className="button"
-            disabled={!userChoice}
+            disabled={!userChoice[currentQuestionIndex]}
           >
             {isQuizCompleted
               ? "REFRESH FOR ANOTHER QUIZ"

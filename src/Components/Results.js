@@ -24,6 +24,8 @@ export default class Results extends React.Component {
               <li>
                 Question {index + 1}: {question}
               </li>
+              Your Answer: {userChoice[index]}
+              <br />
               Correct Answer: {originalChoices[index][0]}
               <br />
               Incorrect Answers:{" "}
