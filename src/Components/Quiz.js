@@ -19,9 +19,11 @@ class Quiz extends React.Component {
       originalChoices: [],
       shuffledChoices: [],
       currentQuestionIndex: 0,
-      userChoice: [],
+      userChoices: [],
       isQuizCompleted: false,
-      score: 0,
+      currentCorrectAnswers: 0,
+      answeredQuestions: 0,
+      accumulatedCorrectAnswers: 0,
     };
   }
 
@@ -29,16 +31,16 @@ class Quiz extends React.Component {
     const { name, value, type } = e.target;
 
     if (type === "radio") {
-      const { userChoice, currentQuestionIndex } = this.state;
+      const { userChoices, currentQuestionIndex } = this.state;
 
-      // Create a copy of the userChoice array
-      const updatedChoices = [...userChoice];
+      // Create a copy of the userChoices array
+      const updatedChoices = [...userChoices];
 
       // Update the selected choice for the current question
       updatedChoices[currentQuestionIndex] = value;
 
       this.setState({
-        userChoice: updatedChoices,
+        userChoices: updatedChoices,
       });
     } else {
       this.setState({
@@ -129,21 +131,56 @@ class Quiz extends React.Component {
   };
 
   handleNextButtonClick = () => {
-    const {userChoice, currentQuestionIndex, originalChoices, questions} = this.state;
+    const {
+      userChoices,
+      currentQuestionIndex,
+      originalChoices,
+      questions,
+      accumulatedCorrectAnswers,
+      answeredQuestions,
+    } = this.state;
+
+    const isAnswerCorrect =
+      userChoices[currentQuestionIndex] ===
+      originalChoices[currentQuestionIndex][0];
+
+    // Update the score
+    const newAccumulatedCorrectAnswers = isAnswerCorrect
+      ? accumulatedCorrectAnswers + 1
+      : accumulatedCorrectAnswers;
+      
+    const newAnsweredQuestions = answeredQuestions + 1;
+
+    // Store the score in local storage
+    localStorage.setItem("quizCorrectAnswers", newAccumulatedCorrectAnswers);
+    localStorage.setItem("quizAnsweredQuestions", newAnsweredQuestions);
 
     this.setState((state) => ({
       currentQuestionIndex: state.currentQuestionIndex + 1,
-      score:
-        userChoice[currentQuestionIndex] ===
-        originalChoices[currentQuestionIndex][0]
-          ? state.score + 1
-          : state.score,
+      currentCorrectAnswers: isAnswerCorrect
+        ? state.currentCorrectAnswers + 1
+        : state.currentCorrectAnswers,
+      accumulatedCorrectAnswers: newAccumulatedCorrectAnswers,
+      answeredQuestions: newAnsweredQuestions,
       isQuizCompleted:
-        currentQuestionIndex === questions.length - 1
-          ? true
-          : false,
+        currentQuestionIndex === questions.length - 1 ? true : false,
     }));
   };
+
+  componentDidMount() {
+    const storedCorrectAnswers = localStorage.getItem("quizCorrectAnswers");
+    const storedAnsweredQuestions = localStorage.getItem(
+      "quizAnsweredQuestions"
+    );
+
+    // When the component is mounted each time, initialize the numbers of accumulatedCorrectAnswers and answeredQuestions to those of values stored in the local storage so that they do not start with 0 even after user has closed the app or browser
+    if (storedCorrectAnswers && storedAnsweredQuestions) {
+      this.setState({
+        accumulatedCorrectAnswers: parseInt(storedCorrectAnswers),
+        answeredQuestions: parseInt(storedAnsweredQuestions),
+      });
+    }
+  }
 
   render() {
     const {
@@ -151,14 +188,14 @@ class Quiz extends React.Component {
       originalChoices,
       shuffledChoices,
       currentQuestionIndex,
-      userChoice,
-      score,
+      userChoices,
+      currentCorrectAnswers,
       isQuizCompleted,
     } = this.state;
     console.log("ori", originalChoices);
     console.log("shuffled", shuffledChoices);
-    console.log("userChoice", userChoice);
-    console.log("score", score);
+    console.log("userChoices", userChoices);
+    console.log("score", currentCorrectAnswers);
 
     return (
       <div>
@@ -187,7 +224,7 @@ class Quiz extends React.Component {
             variant="light"
             onClick={this.handleNextButtonClick}
             className="button"
-            disabled={!userChoice[currentQuestionIndex]}
+            disabled={!userChoices[currentQuestionIndex]}
           >
             {isQuizCompleted
               ? "REFRESH FOR ANOTHER QUIZ"

@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import React from "react";
 import "./App.css";
 import Quiz from "./Components/Quiz";
@@ -9,7 +8,6 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          {/* <img src={logo} className="App-logo" alt="logo" /> */}
           <Countdown date={Date.now() + 100000}/>
           <Quiz />
         </header>

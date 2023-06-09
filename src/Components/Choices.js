@@ -2,7 +2,7 @@ import React from "react";
 
 export default class Choices extends React.Component {
   render() {
-    const { shuffledChoices, currentQuestionIndex, userChoice, handleChange } =
+    const { shuffledChoices, currentQuestionIndex, userChoices, handleChange } =
       this.props;
 
     const radioButtons = shuffledChoices[currentQuestionIndex].map((choice) => (
@@ -11,10 +11,9 @@ export default class Choices extends React.Component {
           <input
             type="radio"
             id={choice}
-            name="userChoice"
+            name="userChoices"
             value={choice}
-            required
-            checked={userChoice[currentQuestionIndex] === choice}
+            checked={userChoices[currentQuestionIndex] === choice}
             onChange={handleChange}
           />
           {choice}
@@ -24,7 +23,7 @@ export default class Choices extends React.Component {
 
     return (
       <div>
-        <form>{radioButtons}</form>
+        {radioButtons}
       </div>
     );
   }

@@ -1,9 +1,17 @@
 import React from "react";
 
 export default class Results extends React.Component {
+  
   render() {
-    const { questions, userChoice, originalChoices, score } = this.props;
-    const currentScore = (score / questions.length) * 100;
+    const {
+      questions,
+      userChoices,
+      originalChoices,
+      currentCorrectAnswers,
+      answeredQuestions,
+      accumulatedCorrectAnswers,
+    } = this.props;
+    const currentScore = (currentCorrectAnswers / questions.length) * 100;
   
     console.log(questions);
 
@@ -11,22 +19,29 @@ export default class Results extends React.Component {
       <div>
         Your Result:
         <br />
-        {score} out of {questions.length} questions correct
+        {currentCorrectAnswers} out of {questions.length} questions correct
         <br />
-        {currentScore} %
+        {currentScore} % 
+        <br/>
+        You have answered {answeredQuestions} questions and
+        answered {accumulatedCorrectAnswers} of them correctly
         <br />
         <br />
         <div>
           Report:
           <br />
           {questions.map((question, index) => (
-            <>
+            <div key={question}>
               <li>
                 Question {index + 1}: {question}
               </li>
-              Your Answer: {userChoice[index]}
+              Your Answer: {userChoices[index]}
               <br />
               Correct Answer: {originalChoices[index][0]}
+              <br />
+              {userChoices[index] === originalChoices[index][0]
+                ? "You got it correct"
+                : "You got it wrong"}
               <br />
               Incorrect Answers:{" "}
               {[
@@ -36,7 +51,7 @@ export default class Results extends React.Component {
                 "; ",
                 originalChoices[index][3],
               ]}
-            </>
+            </div>
           ))}
         </div>
       </div>
