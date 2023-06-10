@@ -6,6 +6,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 export default class Results extends React.Component {
+
+  componentDidMount() {
+    if (this.props.isQuizCompleted) {
+      this.props.stopTimer();
+    }
+  }
+
   render() {
     const {
       questions,
@@ -15,7 +22,6 @@ export default class Results extends React.Component {
       answeredQuestions,
       accumulatedCorrectAnswers,
     } = this.props;
-    const currentScore = (currentCorrectAnswers / questions.length) * 100;
 
     console.log(questions);
 
@@ -80,7 +86,7 @@ export default class Results extends React.Component {
 
                       <Row>
                         <p>
-                          Incorrect Answers: <br/>
+                          Incorrect Answers: <br />
                           {[
                             originalChoices[index][1],
                             "; ",
@@ -90,7 +96,7 @@ export default class Results extends React.Component {
                           ]}
                         </p>
                       </Row>
-                      <hr/>
+                      <hr />
                     </div>
                   ))}
                 </Container>

@@ -24,9 +24,8 @@ class Quiz extends React.Component {
       currentCorrectAnswers: 0,
       answeredQuestions: 0,
       accumulatedCorrectAnswers: 0,
+      showTimer: false,
 
-      // initialize a boolean state for the timer
-      // timer state
       // implement user & leaderboard
     };
   }
@@ -164,6 +163,26 @@ class Quiz extends React.Component {
     }
   }
 
+  startTimer = () => {
+    this.setState({
+      showTimer: true,
+    });
+  };
+
+  stopTimer = () => {
+    this.setState({
+      showTimer: false,
+    });
+  };
+
+  handleTimerComplete = () => {
+    alert("Time's up!");
+    this.setState({
+      showTimer: false,
+      isQuizCompleted: true,
+    });
+  };
+
   render() {
     const {
       questions,
@@ -174,6 +193,7 @@ class Quiz extends React.Component {
       currentCorrectAnswers,
       isQuizCompleted,
     } = this.state;
+
     console.log("ori", originalChoices);
     console.log("shuffled", shuffledChoices);
     console.log("userChoices", userChoices);
@@ -182,12 +202,13 @@ class Quiz extends React.Component {
     return (
       <div>
         {isQuizCompleted ? (
-          <Results {...this.state} />
+          <Results {...this.state} stopTimer={this.stopTimer} />
         ) : questions && questions.length > 0 ? (
           <>
             <Question
-              questions={questions}
-              currentQuestionIndex={currentQuestionIndex}
+              {...this.state}
+              startTimer={this.startTimer}
+              handleTimerComplete={this.handleTimerComplete}
             />
             <Choices {...this.state} handleChange={this.handleChange} />
           </>
