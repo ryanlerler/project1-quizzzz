@@ -1,4 +1,4 @@
-// ToDo: refactor callApi function
+// ToDo: refactor especially callApi function; add comments; implement user & leaderboard etc..
 
 import axios from "axios";
 import React from "react";
@@ -71,7 +71,7 @@ class Quiz extends React.Component {
     // Keep the original choices for result comparison and then shuffle the choices for quiz purpose
     axios
       .get(
-        `https://opentdb.com/api.php?amount=${questionCount}&category=${category}&difficulty=${difficulty}&type=multiple&encode=url3986`
+        `https://opentdb.com/api.php?amount=${questionCount}&category=${category}&difficulty=${difficulty}&encode=url3986`
       )
       .then((data) => {
         console.log(data);
