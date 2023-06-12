@@ -1,12 +1,13 @@
-// ToDo: refactor especially callApi function; add comments; implement user & leaderboard etc..
+// ToDo: refactor codes especially callApi function; add comments; a tooltip or table to show the time allowed; decompose components..
 
 import axios from "axios";
 import React from "react";
 import HomePage from "./HomePage";
 import Question from "./Question";
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import Choices from "./Choices";
 import Results from "./Results";
+import Spinner from "react-bootstrap/Spinner";
 
 class Quiz extends React.Component {
   constructor(props) {
@@ -25,8 +26,7 @@ class Quiz extends React.Component {
       answeredQuestions: 0,
       accumulatedCorrectAnswers: 0,
       showTimer: false,
-
-      // implement user & leaderboard
+      currentUser: "",
     };
   }
 
@@ -64,8 +64,10 @@ class Quiz extends React.Component {
     return choices;
   };
 
-  callApi = () => {
-    const { questionCount, category, difficulty } = this.state;
+  handleStartButtonClick = () => {
+    const { questionCount, category, difficulty, currentUser } = this.state;
+
+    localStorage.setItem("user", currentUser);
 
     // Set encode=url3986 and use decodeURIComponent() to decode the data including special char like '&' etc.
     // Keep the original choices for result comparison and then shuffle the choices for quiz purpose
@@ -153,12 +155,19 @@ class Quiz extends React.Component {
     const storedAnsweredQuestions = localStorage.getItem(
       "quizAnsweredQuestions"
     );
+    const storedUser = localStorage.getItem("user");
 
-    // When the component is mounted each time, initialize the numbers of accumulatedCorrectAnswers and answeredQuestions to those of values stored in the local storage so that they do not start with 0 even after user has closed the app or browser
+    // When the component is mounted each time, initialize the numbers of accumulatedCorrectAnswers and answeredQuestions to those of values stored in the local storage so that they do not start with 0 even after user has closed the app
     if (storedCorrectAnswers && storedAnsweredQuestions) {
       this.setState({
         accumulatedCorrectAnswers: parseInt(storedCorrectAnswers),
         answeredQuestions: parseInt(storedAnsweredQuestions),
+      });
+    }
+
+    if (storedUser) {
+      this.setState({
+        currentUser: storedUser,
       });
     }
   }
@@ -183,15 +192,42 @@ class Quiz extends React.Component {
     });
   };
 
+  // handleBackButtonClick = () => {
+  //   this.setState((state) => ({
+  //     currentQuestionIndex: state.currentQuestionIndex - 1,
+  //   }));
+  // };
+
+  reset = () => {
+    this.setState({
+      questionCount: 5,
+      category: "",
+      difficulty: "",
+      questions: [],
+      originalChoices: [],
+      shuffledChoices: [],
+      currentQuestionIndex: 0,
+      userChoices: [],
+      isQuizCompleted: false,
+      currentCorrectAnswers: 0,
+      showTimer: false,
+    });
+  };
+
   render() {
     const {
+      questionCount,
+      category,
+      difficulty,
       questions,
       originalChoices,
       shuffledChoices,
       currentQuestionIndex,
       userChoices,
-      currentCorrectAnswers,
       isQuizCompleted,
+      currentCorrectAnswers,
+      showTimer,
+      currentUser,
     } = this.state;
 
     console.log("ori", originalChoices);
@@ -206,40 +242,84 @@ class Quiz extends React.Component {
         ) : questions && questions.length > 0 ? (
           <>
             <Question
-              {...this.state}
+              difficulty={difficulty}
+              questions={questions}
+              currentQuestionIndex={currentQuestionIndex}
+              showTimer={showTimer}
               startTimer={this.startTimer}
               handleTimerComplete={this.handleTimerComplete}
             />
-            <Choices {...this.state} handleChange={this.handleChange} />
+            <Choices
+              shuffledChoices={shuffledChoices}
+              currentQuestionIndex={currentQuestionIndex}
+              userChoices={userChoices}
+              handleChange={this.handleChange}
+            />
           </>
         ) : (
-          <HomePage {...this.state} handleChange={this.handleChange} />
+          <>
+            <h1>Welcome to Quizzzz!!!</h1>
+            <Form.Control
+              type="text"
+              name="currentUser"
+              value={currentUser}
+              onChange={this.handleChange}
+              placeholder="What's your name?"
+              className="user-input"
+            />
+            <br />
+            <HomePage
+              questionCount={questionCount}
+              category={category}
+              difficulty={difficulty}
+              handleChange={this.handleChange}
+            />
+          </>
         )}
 
         {questions.length === 0 && (
           <Button
             variant="light"
-            onClick={this.callApi}
+            onClick={this.handleStartButtonClick}
             className="button glow-button"
           >
-            START
+            START{" "}
+            <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+            <span className="visually-hidden">Loading...</span>
           </Button>
         )}
 
         {questions && questions.length > 0 && (
           <Button
             variant="light"
-            onClick={this.handleNextButtonClick}
+            onClick={isQuizCompleted ? this.reset : this.handleNextButtonClick}
             className="button glow-button"
-            disabled={!userChoices[currentQuestionIndex]}
+            disabled={!isQuizCompleted && !userChoices[currentQuestionIndex]}
           >
             {isQuizCompleted
-              ? "REFRESH FOR ANOTHER QUIZ"
+              ? "ANOTHER QUIZ"
               : currentQuestionIndex === questions.length - 1
               ? "SUBMIT"
               : "NEXT"}
           </Button>
         )}
+
+        {/* {questions && questions.length > 0 && (
+          <Button
+            variant="light"
+            onClick={this.handleBackButtonClick}
+            className="button glow-button"
+            disabled={currentQuestionIndex === 1}
+          >
+            BACK
+          </Button>
+        )} */}
       </div>
     );
   }

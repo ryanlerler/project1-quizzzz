@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 
 export default class HomePage extends React.Component {
   render() {
-    const { questionCount, handleChange, category, difficulty } = this.props;
+    const { questionCount, category, difficulty, handleChange } = this.props;
 
     const categoriesOptionTag = Categories.map((category) => (
       <option value={category.id} key={category.id}>
@@ -23,9 +23,6 @@ export default class HomePage extends React.Component {
 
     return (
       <div>
-        <h1>Welcome to Quizzzz!!!</h1>
-        <br />
-
         <Form.Label className="form-label">
           Select Number of Questions:
         </Form.Label>

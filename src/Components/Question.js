@@ -15,7 +15,7 @@ export default class Question extends React.Component {
   }
 
   render() {
-    const { questions, currentQuestionIndex, difficulty, showTimer } =
+    const { difficulty, questions, currentQuestionIndex, showTimer } =
       this.props;
     const { currentTime } = this.state;
 
@@ -33,14 +33,23 @@ export default class Question extends React.Component {
       ? (timeGiven = questions.length * 20000)
       : (timeGiven = questions.length * 30000);
 
+    const renderer = ({ minutes, seconds }) => (
+      // Render a countdown
+      <span>
+        ⏱️ <br /> {minutes} m {seconds} s
+      </span>
+    );
+
     return (
       <div>
         {showTimer && (
           <Countdown
             date={currentTime + timeGiven}
             onComplete={this.props.handleTimerComplete}
+            renderer={renderer}
           />
         )}
+        <br /> <br />
         <ol>{allQuestions[currentQuestionIndex]}</ol>
       </div>
     );

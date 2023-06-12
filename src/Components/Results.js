@@ -6,7 +6,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 export default class Results extends React.Component {
-
   componentDidMount() {
     if (this.props.isQuizCompleted) {
       this.props.stopTimer();
@@ -16,22 +15,23 @@ export default class Results extends React.Component {
   render() {
     const {
       questions,
-      userChoices,
       originalChoices,
+      userChoices,
       currentCorrectAnswers,
       answeredQuestions,
       accumulatedCorrectAnswers,
+      currentUser
     } = this.props;
 
     console.log(questions);
 
     return (
       <div>
-        <h2>Leaderboard</h2>
+        <h2>Results</h2>
         <Table striped bordered hover variant="primary">
           <thead>
             <tr>
-              <th>User</th>
+              <th>Name</th>
               <th>Current Score</th>
               <th>Current No. of Questions</th>
               <th>Total Score</th>
@@ -40,7 +40,7 @@ export default class Results extends React.Component {
           </thead>
           <tbody>
             <tr>
-              <td>{/**ToDo */}</td>
+              <td>{currentUser}</td>
               <td>{currentCorrectAnswers}</td>
               <td>{questions.length} </td>
               <td>{accumulatedCorrectAnswers}</td>
@@ -58,22 +58,24 @@ export default class Results extends React.Component {
                   {questions.map((question, index) => (
                     <div key={question}>
                       <Row>
-                        <li>
-                          Question {index + 1}: <br />
-                          {question}
-                        </li>
+                        <span>
+                          <h4>Question {index + 1} </h4>
+                          <p>{question}</p>
+                        </span>
                       </Row>
 
                       <Row>
                         <Col>
-                          <p>
-                            Your Answer: <br /> {userChoices[index]}
-                          </p>
+                          <span>
+                            <h5>Your Answer</h5>
+                            <p>{userChoices[index]}</p>
+                          </span>
                         </Col>
                         <Col>
-                          <p>
-                            Correct Answer: <br /> {originalChoices[index][0]}
-                          </p>
+                          <span>
+                            <h5>Correct Answer</h5>
+                            <p> {originalChoices[index][0]}</p>
+                          </span>
                         </Col>
                         <Col>
                           {userChoices[index] === originalChoices[index][0] ? (
@@ -85,16 +87,20 @@ export default class Results extends React.Component {
                       </Row>
 
                       <Row>
-                        <p>
-                          Incorrect Answers: <br />
-                          {[
-                            originalChoices[index][1],
-                            "; ",
-                            originalChoices[index][2],
-                            "; ",
-                            originalChoices[index][3],
-                          ]}
-                        </p>
+                        <div>
+                          <h5>Incorrect Answers</h5>
+                          <ul>
+                            {originalChoices[index][1] && (
+                              <li>{originalChoices[index][1]}</li>
+                            )}
+                            {originalChoices[index][2] && (
+                              <li>{originalChoices[index][2]}</li>
+                            )}
+                            {originalChoices[index][3] && (
+                              <li>{originalChoices[index][3]}</li>
+                            )}
+                          </ul>
+                        </div>
                       </Row>
                       <hr />
                     </div>
