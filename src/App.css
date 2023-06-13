@@ -54,6 +54,25 @@ h1 {
   margin-left: 1.5vw;
 }
 
+.open-tdb-logo {
+  width: 7vw;
+}
+
+.the-trivia-api-logo {
+  font-family: Orbitron, sans-serif;
+  font-style: italic;
+  color: #dfa5df;
+  font-size: clamp(1rem, -0.4375rem + 4.1665vw, 1.5rem);
+  text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 3px #bd47bd,
+    0 0 8px #bd47bd, 0 0 12px #bd47bd;
+  word-spacing: 0.3rem;
+  font-weight: 800;
+  -webkit-text-decoration: underline double;
+  text-decoration: underline;
+  -webkit-text-decoration-color: #92d8d8;
+  text-decoration-color: #92d8d8;
+}
+
 .button {
   position: relative;
   width: auto;
@@ -64,6 +83,7 @@ h1 {
   background: #f39c12;
   text-align: center;
   padding: 6px 18px 4px;
+  margin: 1vw;
 
   -webkit-transition: all 0.1s;
   -moz-transition: all 0.1s;

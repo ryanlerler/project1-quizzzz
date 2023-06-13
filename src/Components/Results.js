@@ -17,17 +17,14 @@ export default class Results extends React.Component {
       questions,
       originalChoices,
       userChoices,
-      currentCorrectAnswers,
-      answeredQuestions,
-      accumulatedCorrectAnswers,
-      currentUser
+      leaderboard,
     } = this.props;
 
     console.log(questions);
 
     return (
       <div>
-        <h2>Results</h2>
+        <h2>Leaderboard</h2>
         <Table striped bordered hover variant="primary">
           <thead>
             <tr>
@@ -39,13 +36,15 @@ export default class Results extends React.Component {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>{currentUser}</td>
-              <td>{currentCorrectAnswers}</td>
-              <td>{questions.length} </td>
-              <td>{accumulatedCorrectAnswers}</td>
-              <td>{answeredQuestions}</td>
-            </tr>
+            {leaderboard.map((user) => (
+              <tr>
+                <td>{user.name}</td>
+                <td>{user.currentCorrectAnswers}</td>
+                <td>{questions.length} </td>
+                <td>{user.accumulatedCorrectAnswers}</td>
+                <td>{user.answeredQuestions}</td>
+              </tr>
+            ))}
           </tbody>
         </Table>
 

@@ -1,16 +1,11 @@
 import React from "react";
-import Categories from "./categories.json";
+import OpenTdbCategories from "../utils/opentdb-categories.json";
 import Form from "react-bootstrap/Form";
+import TheTriviaApiCategories from "../utils/thetriviaapi-categories.json";
 
 export default class HomePage extends React.Component {
   render() {
     const { questionCount, category, difficulty, handleChange } = this.props;
-
-    const categoriesOptionTag = Categories.map((category) => (
-      <option value={category.id} key={category.id}>
-        {category.name}
-      </option>
-    ));
 
     const questionCountOptionTag = [];
     for (let i = 5; i <= 50; i += 5) {
@@ -20,6 +15,20 @@ export default class HomePage extends React.Component {
         </option>
       );
     }
+
+    const openTdbCategoriesOptionTag = OpenTdbCategories.map((category) => (
+      <option value={category.id} key={category.id}>
+        Open TDB - {category.name}
+      </option>
+    ));
+
+    const theTriviaApiCategoriesOptionTag = TheTriviaApiCategories.map(
+      (category) => (
+        <option value={category} key={category}>
+          THE TRIVIA API - {category.toLocaleUpperCase()}
+        </option>
+      )
+    );
 
     return (
       <div>
@@ -36,7 +45,6 @@ export default class HomePage extends React.Component {
         >
           {questionCountOptionTag}
         </Form.Select>
-
         <Form.Label>Pick a Category:</Form.Label>
         <br />
         <Form.Select
@@ -45,10 +53,12 @@ export default class HomePage extends React.Component {
           required
           onChange={handleChange}
         >
-          <option value="">Any</option>
-          {categoriesOptionTag}
+          <option value="">Open TDB - Any</option>
+          {openTdbCategoriesOptionTag}
+          <option></option>
+          <option value={TheTriviaApiCategories}>THE TRIVIA API - ANY</option>
+          {theTriviaApiCategoriesOptionTag}
         </Form.Select>
-
         <Form.Label>Choose a Difficulty:</Form.Label>
         <br />
         <Form.Select
