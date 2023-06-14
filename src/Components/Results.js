@@ -35,7 +35,7 @@ export default class Results extends React.Component {
           </thead>
           <tbody>
             {leaderboard.map((user) => (
-              <tr key={user.answeredQuestions}>
+              <tr key={`${user.name} - ${user.currentCorrectAnswers} - ${user.answeredQuestions}`}>
                 <td>{user.name}</td>
                 <td>{user.currentCorrectAnswers}</td>
                 <td>{user.currentQuestionCount} </td>

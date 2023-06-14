@@ -76,14 +76,14 @@ export default class Quiz extends React.Component {
         if (data.data.response_code === 1) {
           Swal.fire({
             title: "Error!",
-            text: "The API doesn't have enough questions for your query. \n (Ex. Asking for 50 Questions in a Category that only has 20.)",
+            html: "The database doesn't have enough questions for your selection.<br>(Eg. Asking for 50 Questions in a Category that only has 20.)",
             icon: "error",
             confirmButtonText: "Cool",
           });
         } else if (data.data.response_code === 2) {
           Swal.fire({
             title: "Error!",
-            text: "Request contains an invalid parameter. Arguments passed in aren't valid.",
+            text: "Invalid request - Make sure you choose a Category within Open TDB.",
             icon: "error",
             confirmButtonText: "Cool",
           });
@@ -383,7 +383,6 @@ export default class Quiz extends React.Component {
             </Button>
           </OverlayTrigger>
         )}
-        <br/>
         
         {questions.length === 0 && (
           <OverlayTrigger
