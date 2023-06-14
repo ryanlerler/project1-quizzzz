@@ -20,8 +20,6 @@ export default class Results extends React.Component {
       leaderboard,
     } = this.props;
 
-    console.log(questions);
-
     return (
       <div>
         <h2>Leaderboard</h2>
@@ -37,7 +35,7 @@ export default class Results extends React.Component {
           </thead>
           <tbody>
             {leaderboard.map((user) => (
-              <tr>
+              <tr key={user.answeredQuestions}>
                 <td>{user.name}</td>
                 <td>{user.currentCorrectAnswers}</td>
                 <td>{questions.length} </td>
@@ -48,7 +46,6 @@ export default class Results extends React.Component {
           </tbody>
         </Table>
 
-        <div>
           <Accordion>
             <Accordion.Item eventKey="0">
               <Accordion.Header>Report</Accordion.Header>
@@ -108,7 +105,6 @@ export default class Results extends React.Component {
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
-        </div>
       </div>
     );
   }

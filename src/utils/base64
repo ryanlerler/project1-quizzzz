@@ -1,0 +1,53 @@
+handleOpenTdbCall = () => {
+  const { questionCount, category, difficulty } = this.state;
+
+  // Set encode=base64 and use atob() to decode the data including special char like '&' etc. (some are still encoded)
+  // Keep the original choices for result comparison and then shuffle the choices for quiz purpose
+  axios
+    .get(
+      `https://opentdb.com/api.php?amount=${questionCount}&category=${category}&difficulty=${difficulty}&encode=base64`
+    )
+    .then((data) => {
+      console.log(data);
+      if (data.data.response_code === 1) {
+        Swal.fire({
+          title: "Error!",
+          text: "The API doesn't have enough questions for your query. \n (Ex. Asking for 50 Questions in a Category that only has 20.)",
+          icon: "error",
+          confirmButtonText: "Cool",
+        });
+      } else if (data.data.response_code === 2) {
+        Swal.fire({
+          title: "Error!",
+          text: "Request contains an invalid parameter. Arguments passed in aren't valid.",
+          icon: "error",
+          confirmButtonText: "Cool",
+        });
+      } else {
+        const randomChoices = data.data.results.map((result) => {
+          const unshuffledChoices = [
+            atob(result.correct_answer),
+            ...result.incorrect_answers.map((answer) => atob(answer)),
+          ];
+          return this.randomizeChoicesOrder(unshuffledChoices);
+        });
+
+        this.setState({
+          questions: data.data.results.map((result) => atob(result.question)),
+          originalChoices: data.data.results.map((result) => [
+            atob(result.correct_answer),
+            ...result.incorrect_answers.map((answer) => atob(answer)),
+          ]),
+          shuffledChoices: randomChoices,
+        });
+      }
+    })
+    .catch(() =>
+      Swal.fire({
+        title: "Error!",
+        text: "Server down! Please try again later.",
+        icon: "error",
+        confirmButtonText: "Cool",
+      })
+    );
+};

@@ -11,7 +11,7 @@ import OpenTdbLogo from "../assets/logo.png";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
-class Quiz extends React.Component {
+export default class Quiz extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,16 +35,12 @@ class Quiz extends React.Component {
 
   handleChange = (e) => {
     const { name, value, type } = e.target;
-
     if (type === "radio") {
       const { userChoices, currentQuestionIndex } = this.state;
-
       // Create a copy of the userChoices array
       const updatedChoices = [...userChoices];
-
       // Update the selected choice for the current question
       updatedChoices[currentQuestionIndex] = value;
-
       this.setState({
         userChoices: updatedChoices,
       });
@@ -69,8 +65,6 @@ class Quiz extends React.Component {
 
   handleOpenTdbCall = () => {
     const { questionCount, category, difficulty } = this.state;
-    localStorage.setItem("user", this.state.currentUser);
-
     // Set encode=url3986 and use decodeURIComponent() to decode the data including special char like '&' etc.
     // Keep the original choices for result comparison and then shuffle the choices for quiz purpose
     axios
@@ -130,8 +124,6 @@ class Quiz extends React.Component {
 
   handleTheTriviaApiCall = () => {
     const { questionCount, category, difficulty } = this.state;
-    localStorage.setItem("user", this.state.currentUser);
-
     axios
       .get(
         `https://the-trivia-api.com/api/questions?limit=${questionCount}&categories=${category}&difficulty=${difficulty}&types=text_choice,image_choice`
@@ -154,7 +146,31 @@ class Quiz extends React.Component {
           ]),
           shuffledChoices: randomChoices,
         });
-      })
+      });
+  };
+
+  updateLeaderboard = () => {
+    const {
+      currentUser,
+      currentCorrectAnswers,
+      answeredQuestions,
+      accumulatedCorrectAnswers,
+      leaderboard,
+    } = this.state;
+
+    const userObject = {
+      name: currentUser,
+      currentCorrectAnswers: currentCorrectAnswers,
+      answeredQuestions: answeredQuestions,
+      accumulatedCorrectAnswers: accumulatedCorrectAnswers,
+    };
+
+    const allUsers = [...leaderboard, userObject];
+    const jsonStrings = JSON.stringify(allUsers);
+    localStorage.setItem("leaderboard", jsonStrings);
+    this.setState({
+      leaderboard: allUsers,
+    });
   };
 
   handleNextButtonClick = () => {
@@ -170,14 +186,11 @@ class Quiz extends React.Component {
     const isAnswerCorrect =
       userChoices[currentQuestionIndex] ===
       originalChoices[currentQuestionIndex][0];
-
     // Update the score
     const newAccumulatedCorrectAnswers = isAnswerCorrect
       ? accumulatedCorrectAnswers + 1
       : accumulatedCorrectAnswers;
-
     const newAnsweredQuestions = answeredQuestions + 1;
-
     // Store the score in local storage
     localStorage.setItem("quizCorrectAnswers", newAccumulatedCorrectAnswers);
     localStorage.setItem("quizAnsweredQuestions", newAnsweredQuestions);
@@ -195,19 +208,7 @@ class Quiz extends React.Component {
       }),
       () => {
         if (currentQuestionIndex === questions.length - 1) {
-          const userObject = {
-            name: this.state.currentUser,
-            currentCorrectAnswers: this.state.currentCorrectAnswers,
-            answeredQuestions: this.state.answeredQuestions,
-            accumulatedCorrectAnswers: this.state.accumulatedCorrectAnswers,
-          };
-
-          const allUsers = [...this.state.leaderboard, userObject];
-
-          localStorage.setItem("leaderboard", JSON.stringify(allUsers));
-          this.setState({
-            leaderboard: allUsers,
-          });
+          this.updateLeaderboard();
         }
       }
     );
@@ -218,23 +219,15 @@ class Quiz extends React.Component {
     const storedAnsweredQuestions = localStorage.getItem(
       "quizAnsweredQuestions"
     );
-    const storedUser = localStorage.getItem("user");
-    const storedLeaderboard = localStorage.getItem("leaderboard");
-
-    // When the component is mounted each time, initialize the numbers of accumulatedCorrectAnswers and answeredQuestions to those of values stored in the local storage so that they do not start with 0 even after user has closed the app
     if (storedCorrectAnswers && storedAnsweredQuestions) {
+      // When the component is mounted each time, initialize the numbers of accumulatedCorrectAnswers and answeredQuestions to those of values stored in the local storage so that they do not start with 0 even after user has closed the app
       this.setState({
         accumulatedCorrectAnswers: parseInt(storedCorrectAnswers),
         answeredQuestions: parseInt(storedAnsweredQuestions),
       });
     }
 
-    if (storedUser) {
-      this.setState({
-        currentUser: storedUser,
-      });
-    }
-
+    const storedLeaderboard = localStorage.getItem("leaderboard");
     if (storedLeaderboard) {
       this.setState({
         leaderboard: JSON.parse(storedLeaderboard),
@@ -266,19 +259,7 @@ class Quiz extends React.Component {
       isQuizCompleted: true,
     });
 
-    const userObject = {
-      name: this.state.currentUser,
-      currentCorrectAnswers: this.state.currentCorrectAnswers,
-      answeredQuestions: this.state.answeredQuestions,
-      accumulatedCorrectAnswers: this.state.accumulatedCorrectAnswers,
-    };
-
-    const allUsers = [...this.state.leaderboard, userObject];
-
-    localStorage.setItem("leaderboard", JSON.stringify(allUsers));
-    this.setState({
-      leaderboard: allUsers,
-    });
+    this.updateLeaderboard();
   };
 
   reset = () => {
@@ -313,6 +294,7 @@ class Quiz extends React.Component {
       leaderboard,
     } = this.state;
 
+    console.log("questions", questions);
     console.log("ori", originalChoices);
     console.log("shuffled", shuffledChoices);
     console.log("userChoices", userChoices);
@@ -321,7 +303,13 @@ class Quiz extends React.Component {
     return (
       <div>
         {isQuizCompleted ? (
-          <Results {...this.state} stopTimer={this.stopTimer} />
+          <Results
+            questions={questions}
+            originalChoices={originalChoices}
+            userChoices={userChoices}
+            leaderboard={leaderboard}
+            stopTimer={this.stopTimer}
+          />
         ) : questions && questions.length > 0 ? (
           <>
             <Question
@@ -375,7 +363,7 @@ class Quiz extends React.Component {
             <Button
               variant="light"
               onClick={this.handleOpenTdbCall}
-              className="button glow-button"
+              className="button"
             >
               <img
                 src={OpenTdbLogo}
@@ -393,7 +381,8 @@ class Quiz extends React.Component {
             </Button>
           </OverlayTrigger>
         )}
-
+        <br/>
+        
         {questions.length === 0 && (
           <OverlayTrigger
             key="the-trivia-api"
@@ -407,7 +396,7 @@ class Quiz extends React.Component {
             <Button
               variant="light"
               onClick={this.handleTheTriviaApiCall}
-              className="button glow-button"
+              className="button"
             >
               <span className="the-trivia-api-logo">THE TRIVIA API </span>
               <Spinner
@@ -426,7 +415,7 @@ class Quiz extends React.Component {
           <Button
             variant="light"
             onClick={isQuizCompleted ? this.reset : this.handleNextButtonClick}
-            className="button glow-button"
+            className="button"
             disabled={!isQuizCompleted && !userChoices[currentQuestionIndex]}
           >
             {isQuizCompleted
@@ -440,5 +429,3 @@ class Quiz extends React.Component {
     );
   }
 }
-
-export default Quiz;

@@ -45,6 +45,7 @@ export default class HomePage extends React.Component {
         >
           {questionCountOptionTag}
         </Form.Select>
+
         <Form.Label>Pick a Category:</Form.Label>
         <br />
         <Form.Select
@@ -59,6 +60,7 @@ export default class HomePage extends React.Component {
           <option value={TheTriviaApiCategories}>THE TRIVIA API - ANY</option>
           {theTriviaApiCategoriesOptionTag}
         </Form.Select>
+        
         <Form.Label>Choose a Difficulty:</Form.Label>
         <br />
         <Form.Select
