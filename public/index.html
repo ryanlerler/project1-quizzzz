@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" href="%PUBLIC_URL%/logo.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
@@ -24,7 +24,44 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Quizzzz</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-VG3ZK6VCX9"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-VG3ZK6VCX9");
+    </script>
+
+    <!-- sharing configuration -->
+    <!-- Primary Meta Tags -->
+    <title>Quizzzz</title>
+    <meta name="title" content="Ryan Ler's Quiz App!" />
+    <meta
+      name="description"
+      content="A dynamic quiz app I made myself! 😄💪🌈"
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://ryanlerler.github.io/project1-quizzzz/"
+    />
+    <meta property="og:title" content="Ryan Ler's Quiz App!" />
+    <meta
+      property="og:description"
+      content="A dynamic quiz app I made myself! 😄💪🌈"
+    />
+    <meta property="og:image" content="https://i.imgur.com/iyBtjr8.png" />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
