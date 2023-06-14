@@ -38,7 +38,7 @@ export default class Results extends React.Component {
               <tr key={user.answeredQuestions}>
                 <td>{user.name}</td>
                 <td>{user.currentCorrectAnswers}</td>
-                <td>{questions.length} </td>
+                <td>{user.currentQuestionCount} </td>
                 <td>{user.accumulatedCorrectAnswers}</td>
                 <td>{user.answeredQuestions}</td>
               </tr>
@@ -46,65 +46,65 @@ export default class Results extends React.Component {
           </tbody>
         </Table>
 
-          <Accordion>
-            <Accordion.Item eventKey="0">
-              <Accordion.Header>Report</Accordion.Header>
-              <Accordion.Body>
-                <Container fluid>
-                  {questions.map((question, index) => (
-                    <div key={question}>
-                      <Row>
+        <Accordion>
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>Report</Accordion.Header>
+            <Accordion.Body>
+              <Container fluid>
+                {questions.map((question, index) => (
+                  <div key={question}>
+                    <Row>
+                      <span>
+                        <h4>Question {index + 1} </h4>
+                        <p>{question}</p>
+                      </span>
+                    </Row>
+
+                    <Row>
+                      <Col>
                         <span>
-                          <h4>Question {index + 1} </h4>
-                          <p>{question}</p>
+                          <h5>Your Answer</h5>
+                          <p>{userChoices[index]}</p>
                         </span>
-                      </Row>
+                      </Col>
+                      <Col>
+                        <span>
+                          <h5>Correct Answer</h5>
+                          <p> {originalChoices[index][0]}</p>
+                        </span>
+                      </Col>
+                      <Col>
+                        {userChoices[index] === originalChoices[index][0] ? (
+                          <p>You got it correct!</p>
+                        ) : (
+                          <p>You got it wrong!</p>
+                        )}
+                      </Col>
+                    </Row>
 
-                      <Row>
-                        <Col>
-                          <span>
-                            <h5>Your Answer</h5>
-                            <p>{userChoices[index]}</p>
-                          </span>
-                        </Col>
-                        <Col>
-                          <span>
-                            <h5>Correct Answer</h5>
-                            <p> {originalChoices[index][0]}</p>
-                          </span>
-                        </Col>
-                        <Col>
-                          {userChoices[index] === originalChoices[index][0] ? (
-                            <p>You got it correct!</p>
-                          ) : (
-                            <p>You got it wrong!</p>
+                    <Row>
+                      <div>
+                        <h5>Incorrect Answers</h5>
+                        <ul>
+                          {originalChoices[index][1] && (
+                            <li>{originalChoices[index][1]}</li>
                           )}
-                        </Col>
-                      </Row>
-
-                      <Row>
-                        <div>
-                          <h5>Incorrect Answers</h5>
-                          <ul>
-                            {originalChoices[index][1] && (
-                              <li>{originalChoices[index][1]}</li>
-                            )}
-                            {originalChoices[index][2] && (
-                              <li>{originalChoices[index][2]}</li>
-                            )}
-                            {originalChoices[index][3] && (
-                              <li>{originalChoices[index][3]}</li>
-                            )}
-                          </ul>
-                        </div>
-                      </Row>
-                      <hr />
-                    </div>
-                  ))}
-                </Container>
-              </Accordion.Body>
-            </Accordion.Item>
-          </Accordion>
+                          {originalChoices[index][2] && (
+                            <li>{originalChoices[index][2]}</li>
+                          )}
+                          {originalChoices[index][3] && (
+                            <li>{originalChoices[index][3]}</li>
+                          )}
+                        </ul>
+                      </div>
+                    </Row>
+                    <hr />
+                  </div>
+                ))}
+              </Container>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
       </div>
     );
   }

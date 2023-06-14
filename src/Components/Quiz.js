@@ -152,6 +152,7 @@ export default class Quiz extends React.Component {
   updateLeaderboard = () => {
     const {
       currentUser,
+      questionCount,
       currentCorrectAnswers,
       answeredQuestions,
       accumulatedCorrectAnswers,
@@ -160,6 +161,7 @@ export default class Quiz extends React.Component {
 
     const userObject = {
       name: currentUser,
+      currentQuestionCount: questionCount,
       currentCorrectAnswers: currentCorrectAnswers,
       answeredQuestions: answeredQuestions,
       accumulatedCorrectAnswers: accumulatedCorrectAnswers,
