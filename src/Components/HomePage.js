@@ -33,7 +33,7 @@ export default class HomePage extends React.Component {
     return (
       <div>
         <Form.Label className="form-label">
-          Select Number of Questions:
+          Select No. of Questions:
         </Form.Label>
         <br />
         <Form.Select
@@ -46,7 +46,7 @@ export default class HomePage extends React.Component {
           {questionCountOptionTag}
         </Form.Select>
 
-        <Form.Label>Pick a Category:</Form.Label>
+        <Form.Label>Pick a Database & Category:</Form.Label>
         <br />
         <Form.Select
           name="category"

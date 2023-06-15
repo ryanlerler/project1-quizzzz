@@ -347,7 +347,7 @@ export default class Quiz extends React.Component {
               difficulty={difficulty}
               handleChange={this.handleChange}
             />
-            <Form.Label>Opt For a Database:</Form.Label>
+            <Form.Label>Click on the Database:</Form.Label>
             <br />
           </>
         )}
